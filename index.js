@@ -4,6 +4,7 @@
  */
 
 // array de tareas
+const URL = "http://localhost:3000/tareas";
 let listaDeTareas = [];
 let tareasFiltradas = [];
 
@@ -33,13 +34,16 @@ const editarTarea = (e, indice, estado) => {
     </select>`;
 };
 
-const listarTareas = () => {
+const listarTareas = async () => {
+  const promesa = fetch(URL);
+  const resolver = await promesa;
+  const respuesta = await resolver.json();
   const section = document.getElementById("listaTareas");
   let htmLista = "";
   /**
    * [{tarea: lavar, estado: pendiente}, {tarea: barrer, estado:pendiente}]
    */
-  listaDeTareas.forEach(
+  respuesta.forEach(
     (tarea, index) =>
       (htmLista += `<div class="listaItem"> 
                 <span>${tarea.nombre}</span> 
@@ -63,18 +67,27 @@ const recibirForm = (e) => {
   form.reset();
   // {tarea: "", estado: ""}
   agregarTarea(json.tarea, json.estado);
-  console.log("lita de tareas", listaDeTareas);
 };
 
 // declaracion de la funcion agregar tarea
-const agregarTarea = (nombre, estado) => {
+const agregarTarea = async (nombre, estado) => {
   const tarea = {
     nombre,
     estado,
   };
-  
+  const promesa = fetch(URL, {
+    method: "POST",
+    body: JSON.stringify(tarea),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  const resolver = await promesa;
+  const respuesta = await resolver.json();
+  console.log("respuesta", respuesta);
   //listaDeTareas.push(tarea);
-  //listarTareas();
+  listarTareas();
 };
 
 // declaracion de la funcion cambiar estado por el nombre de la tarea
@@ -181,5 +194,3 @@ const getData = async () => {
     console.error("Error", e);
   }
 };
-
-getData();
