@@ -1,0 +1,80 @@
+section > p {
+  color: blue;
+}
+
+section p {
+  color: brown;
+}
+
+.item {
+  width: 70px;
+  height: 70px;
+  border: 1px solid black;
+  margin: 5px;
+}
+
+.container{
+  display: flex;
+  flex-flow: row wrap;
+}
+/*max-with: hasta min-width: desde*/
+@media screen and (max-width: 300px) {
+  .item {
+    background-color: blueviolet;
+  }
+}
+
+@media screen and (min-width: 301px) {
+  .item {
+    background-color:aquamarine;
+  }
+
+}
+.contador {
+  display: flex;
+  width: 500px;
+  justify-content: space-between;
+  
+}
+
+.contador p {
+  padding: 10px
+}
+
+#agregarTarea {
+  width: 100%;
+  text-align: center;
+}
+#agregarTarea input {
+  padding: 8px;
+  border-radius: 15px;
+  border: 1px solid lightgrey;
+}
+#agregarTarea select {
+  padding: 8px;
+  border-radius: 15px;
+  border: 1px solid lightgrey;
+}
+#agregarTarea button {
+  padding: 8px;
+  border-radius: 15px;
+  border: 1px solid lightgrey;
+  background-color: chocolate;
+  color: white;
+}
+.contenedorTareas {
+  width: 60%;
+  margin: auto;
+  background-color:coral;
+  border-radius: 15px;
+  height: auto;
+  margin-top: 50px;
+  padding: 20px;
+  color: aliceblue;
+}
+.listaItem {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+}
