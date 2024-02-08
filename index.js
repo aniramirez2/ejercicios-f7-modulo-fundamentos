@@ -8,20 +8,32 @@ const URL = "http://localhost:3000/tareas";
 let listaDeTareas = [];
 let tareasFiltradas = [];
 
-const editarEstado = (e, indice, estado) => {
+const editarEstado = async (e, id, nombreTarea) => {
   e.preventDefault();
-  console.log("evento on change", e);
   const newEstado = e.target.value;
-  cambiarEstadoPorPosicion(indice, newEstado);
+  const promesa = fetch(`${URL}/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      nombre: nombreTarea,
+      estado: newEstado,
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+  const resolver = await promesa.json;
+  const respuesta = await resolver.json();
+
+  //cambiarEstadoPorPosicion(indice, newEstado);
   listarTareas();
 };
 
-const editarTarea = (e, indice, estado) => {
+const editarTarea = (e, id, estado, nombreTarea) => {
   e.preventDefault();
-  console.log("estado", estado);
-  const span = document.getElementById(`tarea${indice}`);
+  const span = document.getElementById(`tarea${id}`);
   span.innerHTML = `
-    <select name="estado" onchange="editarEstado(event, ${indice}, '${estado}' )">
+    <select name="estado" onchange="editarEstado(event, '${id}', '${nombreTarea}')">
       <option value="pendiente" ${
         estado == "pendiente" ? "selected" : null
       }>Pendiente</option>
@@ -35,9 +47,8 @@ const editarTarea = (e, indice, estado) => {
 };
 
 const listarTareas = async () => {
-  const promesa = fetch(URL);
-  const resolver = await promesa;
-  const respuesta = await resolver.json();
+  const promesa = await fetch(URL);
+  const respuesta = await promesa.json();
   const section = document.getElementById("listaTareas");
   let htmLista = "";
   /**
@@ -47,9 +58,9 @@ const listarTareas = async () => {
     (tarea, index) =>
       (htmLista += `<div class="listaItem"> 
                 <span>${tarea.nombre}</span> 
-                <span id="tarea${index}">${tarea.estado}</span>
-                <button type="button" onclick="editarTarea(event, ${index}, '${tarea.estado}' )"> Editar</button>
-                <button type="button" onclick="eliminarTareaPorPosicion(${index})">Eliminar</button>
+                <span id="tarea${tarea.id}">${tarea.estado}</span>
+                <button type="button" onclick="editarTarea(event, '${tarea.id}', '${tarea.estado}', '${tarea.nombre}' )"> Editar</button>
+                <button type="button" onclick="eliminarTareaPorId('${tarea.id}')">Eliminar</button>
               </div>`)
   );
   section.innerHTML = htmLista;
@@ -83,7 +94,7 @@ const agregarTarea = async (nombre, estado) => {
     },
   });
 
-  const resolver = await promesa;
+  const resolver = await promesa.json;
   const respuesta = await resolver.json();
   console.log("respuesta", respuesta);
   //listaDeTareas.push(tarea);
@@ -121,8 +132,15 @@ const filtrarTareas = (e) => {
 };
 
 //declaracion de la funcion para eliminar tareas
-const eliminarTareaPorPosicion = (posicion) => {
-  listaDeTareas.splice(posicion, 1);
+const eliminarTareaPorId = async (id) => {
+  //alert("entré")
+  //listaDeTareas.splice(posicion, 1);
+  const promesa = fetch(`${URL}/${id}`, {
+    method: "DELETE",
+  });
+
+  const resolver = await promesa.json;
+  const respuesta = await resolver.json();
   listarTareas();
 };
 
