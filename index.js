@@ -47,14 +47,14 @@ const editarTarea = (e, id, estado, nombreTarea) => {
 };
 
 const listarTareas = async () => {
-  const promesa = await fetch(URL);
-  const respuesta = await promesa.json();
+  const { data } = await axios.get(URL);
+  console.log("data", data);
   const section = document.getElementById("listaTareas");
   let htmLista = "";
   /**
    * [{tarea: lavar, estado: pendiente}, {tarea: barrer, estado:pendiente}]
    */
-  respuesta.forEach(
+  data.forEach(
     (tarea, index) =>
       (htmLista += `<div class="listaItem"> 
                 <span>${tarea.nombre}</span> 
@@ -192,7 +192,7 @@ fetch('https://jsonplaceholder.typicode.com/posts', {
   .then((json) => console.log(json));*/
 
 const getData = async () => {
-  const url = "https://jsonplaceholder.typicode.com/posts";
+  const url = "";
   try {
     const respuesta = await fetch(url, {
       method: "POST",
